@@ -10,9 +10,9 @@ DATA_DIR = Path("data")
 DB_DIR = Path("chroma_db")
 
 EMBED_MODEL = "embeddinggemma"
-CHUNK_SIZE = 180
-CHUNK_OVERLAP = 30
-BATCH_SIZE = 32
+CHUNK_SIZE = 180  # Number of words per chunk
+CHUNK_OVERLAP = 30  # Number of words to overlap between chunks
+BATCH_SIZE = 32  # Number of documents to process in each batch
 
 # Create local persistent database
 client = chromadb.PersistentClient(path=str(DB_DIR))
