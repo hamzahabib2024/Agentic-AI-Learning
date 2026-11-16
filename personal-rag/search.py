@@ -43,8 +43,9 @@ def search_documents(question):
 
     print("\nRelevant information:\n")
 
+    # Display results
     for i, (document, metadata, distance) in enumerate(
-        zip(
+        zip(   # zip function is used to combine the three lists into a single iterable, where each element is a tuple containing one item from each list. In this case, it combines the first document, metadata, and distance from the results of the query.
             results["documents"][0],
             results["metadatas"][0],
             results["distances"][0]
@@ -65,7 +66,7 @@ def search_documents(question):
         print("-" * 50)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":   #this is the main entry point of the script, it means that if this script/python_file is run directly, the code inside this block will be executed. If the script is imported as a module in another script, the code inside this block will not be executed.
 
     while True:
 
