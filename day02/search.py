@@ -1,4 +1,3 @@
-
 import chromadb
 import ollama
 
@@ -9,37 +8,41 @@ from config import (
     TOP_K
 )
 
+# connect to chromaDB
 
-# Connect to ChromaDB
 client = chromadb.PersistentClient(
-    path=str(DB_DIR)
+    path = str(DB_DIR)
 )
 
-collection = client.get_collection(
-    name=COLLECTION_NAME
+collection = client.get_or_create_collection(
+    name = COLLECTION_NAME
 )
 
 
-# Retrieve relevant document chunks
+# Retrieve relevant documents chunks
+
 def retrieve_context(question):
 
-    # Convert question into an embedding
+    # convert question into an embedding
     response = ollama.embed(
-        model=EMBED_MODEL,
-        input=question
+        model = EMBED_MODEL,
+        input = question
     )
 
     query_embedding = response["embeddings"][0]
 
-    # Search ChromaDB
+    # Search chromaDB
+    if collection.count() == 0:
+        return "", []
     results = collection.query(
-        query_embeddings=[query_embedding],
-        n_results=min(TOP_K, collection.count()),
-        include=["documents", "metadatas", "distances"]
+        query_embeddings = [query_embedding],
+        n_results = min(TOP_K, collection.count()),
+        include = ["documents", "metadatas", "distances"]
     )
 
     documents = results["documents"][0]
     metadatas = results["metadatas"][0]
+
 
     context = ""
     sources = []
@@ -50,15 +53,14 @@ def retrieve_context(question):
         page = metadata.get("page", "Unknown")
 
         context += f"""
-Source: {source}
-Page: {page}
+        
+source: {source}
+page: {page}
 
-Content:
-{document}
+content: {document}
 
---------------------------
+-------------------------
 """
-
         sources.append({
             "source": source,
             "page": page
@@ -66,8 +68,8 @@ Content:
 
     return context, sources
 
-
 # Test retrieval independently
+
 if __name__ == "__main__":
 
     question = input("Enter your question: ")
@@ -78,6 +80,6 @@ if __name__ == "__main__":
     print(context)
 
     print("\nRetrieved Sources:")
-
     for source in sources:
         print(source)
+
