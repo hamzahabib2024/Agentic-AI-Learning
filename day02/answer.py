@@ -44,7 +44,7 @@ ANSWER:
             "temperature": 0.2
         }
     )
-    return response["messages"]["content"]
+    return response["message"]["content"]
 
 
 # main application
